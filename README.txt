@@ -1,16 +1,16 @@
 # GalDynPsrFreq Package
 
-GalDynPsrFreq is a package for calculating dynamical contributions in the second derivative of the frequencies, spin or orbital, of pulsars in the Galactic field. It can calculate the fractional contributions or the excess terms, e.g. \ddot{f}/f|_excess where f is either the orbital frequency or the spin frequency. Various dynamical contributions, including the Shklovskii effect (the contribution due to the proper motion) or due to the acceleration of the pulsar caused by the gravitational potential of the Galaxy, can be calculated. Two Models- one incorporating BH in Galactic potential, and one without the BH contribution, to perform these tasks are available in the package. Using the measured values of the frequency, frequency derivative, and frequency second derivative, GalDynPsrFreq can even compute the "intrinsic" values of the frequency second derivatives, provided no other extra contribution exist. 
+GalDynPsrFreq is a package for calculating dynamical contributions in the second derivative of the frequencies, spin or orbital, of pulsars in the Galactic field. It can calculate the fractional contributions or the excess terms, e.g. \ddot{f}/f|_excess where f is either the orbital frequency or the spin frequency. Various dynamical contributions to the first derivative of frequency (spin or orbital), including the Shklovskii effect (the contribution due to the proper motion) or due to the acceleration of the pulsar caused by the gravitational potential of the Galaxy, can also be calculated. For the case of calculating the excess terms in the first derivative of frequency, as well as, the case for the second derivative of frequency, two models are available for each case- one incorporating BH in Galactic potential, and one without the BH contribution. Using the measured values of the frequency, frequency derivative, and frequency second derivative, GalDynPsrFreq can even compute the "intrinsic" values of the frequency derivative, as well as, the frequency second derivative, provided no other extra contribution exist. 
 
-Details on various dynamical effects and various models to estimate those are available in Pathak and Bagchi (arXiv: 1909.13113).
+Details on various dynamical effects and formalism to estimate those are available in Pathak and Bagchi (arXiv: 1909.13113).
 
 Brief outline of usage of GalDynPsr is given below.
 
 # 1) Install GalDynPsrFreq as pip3 install GalDynPsrFreq (assuming you have numpy, scipy, and galpy already installed and working)
 
-### If wished, one can change the values of Rs (galactocentric cylindrical radius of the sun), Vs  (rotational speed of the sun) etc in parameters.in file that can be found inside the GalDynPsr (installed directory). 
+### If wished, one can change the values of Rs (galactocentric cylindrical radius of the sun), Vs  (rotational speed of the sun) etc in parameters.in file that can be found inside the GalDynPsrFreq (installed directory). 
 ## But remember that galpy also has these values defined in the file '$home/.galpyrc'. One can in principle change these values. 
-# However, the Milky Way potential in galpy was fitted with Rs = 8 kpc and vs = 220 in galpy
+# However, the Milky Way potential in galpy was fitted with Rs = 8 kpc and vs = 220 in galpy.
 
 
 # 2) Import GalDynPsrFreq
