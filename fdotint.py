@@ -20,9 +20,9 @@ def fdotShk(Ex_shk,f):
    return Ex_shk*f;
 
 
-def fdotint(Ex_pl,Ex_z,Ex_shk,fdot_obs,f):
+def fdotint(Ex_pl,Ex_z,Ex_shk,fdotobs,f):
    a1 = (Ex_pl + Ex_z + Ex_shk)*f
-   a2 = fdot_obs - a1
+   a2 = fdotobs - a1
    return a2;
 
 

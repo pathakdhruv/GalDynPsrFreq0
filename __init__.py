@@ -3,7 +3,7 @@ name = "GalDynPsrFreq"
 
 print("Odering of arguments in all functions in GalDynPsrFreq is very important. Consult the README.md (online) or the README.txt file residing in the installation directory")
 
-from GalDynPsrFreq import ReadGC
+
 from GalDynPsrFreq import read_parameters
 from GalDynPsrFreq import galpyMWRfo
 from GalDynPsrFreq import galpyMWBHRfo
