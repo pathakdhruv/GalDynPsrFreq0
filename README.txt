@@ -17,9 +17,13 @@ Brief outline of usage of GalDynPsr is given below.
 
 import GalDynPsrFreq
 
+
 # 3) In all of the following modules, the ordering of the arguments of the functions are very important.
 
-# 4) To run this code we need the following observable paramters- Galactic longitude in degrees (say ldeg), Galactic latitude in degrees (say bdeg), the distance of the pulsar from the solar system barycenter in kpc (say dkpc), proper motion in Galactic longitude in mas/yr (say mul), proper motion in Galactic latitude in mas/yr (say mub), radial component of the ralative velocity of the pulsar with respect to the solar system barycenter in km/s (say vrad), frequency in Hz (say f), observed frequency derivative in s^{-2} (say fdotobs), and observed frequency second derivative in s^{-3} (say fdotdotobs). The frequency and its derivatives can either be spin or orbital. 
+
+# 4) To run this code we need the following observable parameters- Galactic longitude in degrees (say ldeg), Galactic latitude in degrees (say bdeg), the distance of the pulsar from the solar system barycenter in kpc (say dkpc), proper motion in Galactic longitude in mas/yr (say mul), proper motion in Galactic latitude in mas/yr (say mub), radial component of the relative velocity of the pulsar with respect to the solar system barycenter in km/s (say vrad), frequency in Hz (say f), observed frequency derivative in s^{-2} (say fdotobs), and observed frequency second derivative in s^{-3} (say fdotdotobs). The frequency and its derivatives can either be spin or orbital. 
+
+
 
 # 5) Calculate excess terms for the first frequency derivative using either the model that does not take into account BH contribution to Milky Way Potential (modelnoBH), or the model that takes into account BH contribution to Milky Way Potential (modelBH). For the purpose of understanding their usage let us refer to them as modelX ** Very important, model names are case sensitive!
 
@@ -30,11 +34,13 @@ The function Expl() calculates the excess term due to the relative acceleration 
 Remember to replace modelX by the model you want to use, i.e., modelnoBH or modelBH. Model names are case sensitive!
 
 
+
 # 6) Calculate the Shklovskii term contribution to the frequency derivative
 
 The Shklovskii term can be calculated as GalDynPsrFreq.Shk.Exshk(dkpc,  mul, mub) 
 
 where mul is the proper motion in the Galactic longitude direction (mas/yr) and mub is the proper motion in the Galactic latitude direction (mas/yr). dkpc is as usual the distance of the pulsar from the solar system barycenter in kpc. One needs to assign the values of these parameters first.
+
 
 
 # 7) Print the basic parameters of the pulsars
@@ -43,14 +49,16 @@ GalDynPsrFreq.read_parameters.Rskpc returns the Galactocentric cylindrical radiu
 
 GalDynPsrFreq.read_parameters.Vs returns the rotational speed of the sun.
 
-GalDynPsrFreq.read_parameters.Rpkpc(ldeg,  bdeg,  dkpc) returns the value of Galactocentric cylindrical radius of the pulsar in kpc and GalDynPsrFreq.read_parameters.z(ldeg,  bdeg,  dkpc) returns the verical height of the pulsar from the Galactic plane. The meaning of the arguments are as usual.
+GalDynPsrFreq.read_parameters.Rpkpc(ldeg,  bdeg,  dkpc) returns the value of Galactocentric cylindrical radius of the pulsar in kpc.
+
+GalDynPsrFreq.read_parameters.z(ldeg,  bdeg,  dkpc) returns the perpendicular displacement of the pulsar from the Galactic plane. 
+The meaning of the arguments are as usual.
 
 
 
 # 8) Calculation of instrinsic frequency derivative. Ordering of the arguments is important.
 
-
-First assign values of ldeg,  bdeg,  dkpc,  (meaning of the parameters are as usual) and calculate the excess terms for frequency first derivative as usual:
+First assign values of ldeg,  bdeg, and dkpc  (meaning of the parameters are as usual), and calculate the excess terms for frequency first derivative as usual:
 
 fex_pl =  GalDynPsrFreq.modelX.Expl(ldeg, bdeg, dkpc) # excess term parallel to the Galactic plane
 
@@ -59,34 +67,37 @@ fex_z =  GalDynPsrFreq.modelX.Exz(ldeg, bdeg, dkpc) # excess term perpendicular 
 fex_shk =  GalDynPsrFreq.Shk.Exshk(dkpc, mul, mub) # excess term due to the Shklovskii effect
 
 
+Now assign the values of the frequency 'f' in Hz, the measured value of the frequency derivative 'fdotobs' in seconds^(-2); and calculate the dynamically caused values of the frequency derivatives in seconds^(-2) as:
 
-Now assign the values of the frequency 'f' in Hz, the measured value of the frequency derivative 'fdotobs' in seconds^(-2); and calculate the dynamically caused values of the frequency derivatives (in seconds^-2) as:
+GalDynPsrFreq.fdotint.fdotExpl(fex_pl,f) # due to the parallel component of the acceleration
 
-GalDynPsrFreq.fdotint.fdotExpl(Ex_pl,f) # due to the parallel component of the acceleration
+GalDynPsrFreq.fdotint.fdotExz(fex_z,f) # due to the perpendicular component of the acceleration
 
-GalDynPsrFreq.fdotint.fdotExz(Ex_z,f) # due to the perpendicular component of the acceleration
-
-GalDynPsrFreq.fdotint.fdotShk(Ex_shk,f) # due to the Shklovskii effect
+GalDynPsrFreq.fdotint.fdotShk(fex_shk,f) # due to the Shklovskii effect
 
 The total dynamically caused value of fdot is the addition of the above three terms. The intrinsic value of the frequency derivative can be calculated by subtracting that sum from the measured value of the frequency derivative. GalDynPsrFreq can perform this task for us by:
 
 GalDynPsrFreq.fdotint.fdotint(Ex_pl,Ex_z,Ex_shk,fdotobs,f) 
 
 The total dynamical contribution due to the Galactic potential in the frequency derivative, i.e. the sum of GalDynPsrFreq.fdotint.fdotExpl(Ex_pl,f) and GalDynPsrFreq.fdotint.fdotExz(Ex_z,f) can be printed as:
+
 GalDynPsrFreq.fdotint.fdotGal(Ex_pl,Ex_z,f)
+
 
 
 # 9) Calculation of excess terms in the frequency second derivative. Ordering of the arguments is important.
 
 For dynamical contributions in the second derivative of frequency, we use the following modules from GalDynPsrFreq
 
-a)When not incorporating BH contribution to Milky Way Potential: Model fdotdotexc:
+a)When not incorporating BH contribution to Milky Way Potential: Model fdotdotexc -
 fddotfex = GalDynPsrFreq.fdotdotexc.fdotdotexccal(ldeg,bdeg,dkpc,mul,mub,Rpkpc,zkpc,f,fdotobs,vrad,fex_pl,fex_z,fex_shk) 
 
-b) When incorporating BH contribution to Milky Way Potential: Model fdotdotexcBH:
+b) When incorporating BH contribution to Milky Way Potential: Model fdotdotexcBH -
 fddotfex = GalDynPsrFreq.fdotdotexcBH.fdotdotexcwBHcal(ldeg,bdeg,dkpc,mul,mub,Rpkpc,zkpc,f,fdotobs,vrad,fex_pl,fex_z,fex_shk)
 
 Arguments fex_pl,fex_z, and fex_shk are defined in point 8, while the rest of the argument definitions are described in point 4.  
+
+
 
 # 10) Calculation of intrinsic frequency second derivative. Ordering of the arguments is important.
 
@@ -114,9 +125,9 @@ import GalDynPsrFreq
 ########### Example #################
 ldeg =20.0
 
-bdeg = 45.0
+bdeg = 20.
 
-dkpc = 1.2
+dkpc = 2.0
 
 ############# Extract important parameters say values of Rp (in kpc) and z (in kpc)  ##########
 
@@ -127,12 +138,12 @@ zkpc = GalDynPsr.read_parameters.z(ldeg, bdeg, dkpc)
 
 #################  Compute excess Shklovskii term for frequency first derivative using Exshk() #################################
 
-#### We need to provide the values of proper motion in Galactic longitude direction and proper motion in the Galactic latitude direction########
+#### We need to provide the values of proper motion in Galactic longitude direction and proper motion in the Galactic latitude direction#####
 
 ##mul = proper motion in Galactic longitude direction (mas/yr), mub = proper motion in Galactic latitude direction (mas/yr)
 
-mul = 22.0
-mub = 1.2
+mul = 20.
+mub = 20.
 
 ExcessSh = GalDynPsrFreq.Shk.Exshk(dkpc, mul, mub)
 
@@ -162,56 +173,29 @@ totalfexGal = fex_pl+fex_z
 
 ######################### For Intrinsic frequency derivative calculations ###############################
 
-## Parameters required for spin (or orbital) frequency derivative calcuations:- f = frequency in Hz, fdotobs = measured frequency derivative in s^-2
+## Observable parameters required for spin (or orbital) frequency derivative calcuations: f = frequency in Hz, fdotobs = measured frequency derivative in s^-2
+#Calculated parameters required: fex_pl = excess term in first derivative of frequency parallel to the Galactic plane in s^-1, fex_z = excess term in first derivative of frequency perpendicular to the Galactic plane in s^-1, fex_shk = excess term in first derivative of frequency due to Shklovskii effect in s^-1 
 
-#fdotExpl(fex_pl,f) calculates the planar contribution to the frequency derivative 
-
-#fdotExz(fex_z,f) calculates the perpendicular contribution to the frequency derivative
- 
-#fdotGal(fex_pl,fex_z,f) calculates the sum of planar and perpendicular contributions to the frequency derivative
-
-#fdotShk(fex_shk,f) calculates the Shklovskii contribution to the frequency derivative
-
-#fdotint(fex_pl,fex_z,fex_shk,fdotobs,f) calculates the intrinsic frequency derivative
-
-
-
-
-### Example ###
-
-#modelBH and 
-
-ldeg = 20.
-bdeg=20.
-vrad = 20.
 f = 50.
-dkpc = 2.
-mul = 20.
-mub = 20.
+
 fdotobs = -1.43e-15
-fdotdotobs = 1.2e-28
+
+fdot_Expl = GalDynPsrFreq.fdotint.fdotExpl(fex_pl,f) #calculates the planar contribution to the frequency derivative 
+
+fdot_Exz = GalDynPsrFreq.fdotint.fdotExz(fex_z,f) #calculates the perpendicular contribution to the frequency derivative
+ 
+fdot_Gal = GalDynPsrFreq.fdotint.fdotGal(fex_pl,fex_z,f) #calculates the sum of planar and perpendicular contributions to the frequency derivative
+
+fdot_Shk = GalDynPsrFreq.fdotint.fdotShk(fex_shk,f) #calculates the Shklovskii contribution to the frequency derivative
+
+fdot_int = GalDynPsrFreq.fdotint.fdotint(fex_pl,fex_z,fex_shk,fdotobs,f) #calculates the intrinsic frequency derivative
 
 
-fex_pl = GalDynPsrFreq.modelBH.Expl(ldeg, bdeg, dkpc)
+#### Compute excess term for second derivative of frequency#################
+#Additional observable parameters required: vrad = radial velocity in km/s
+#Calculated parameters required- Rpkpc = Galactocentric cylindrical radius of the pulsar in kpc, zkpc = displacement of the pulsar perpendicular to the Galactic plane in kpc
 
-fex_z = GalDynPsrFreq.modelBH.Exz(ldeg, bdeg, dkpc)
-
-fex_shk = GalDynPsrFreq.Shk.Exshk(dkpc, mul, mub)
-
-
-
-fdotExpl =  GalDynPsrFreq.fdotint.fdotExpl(fex_pl,f)
-
-fdotExz =  GalDynPsrFreq.fdotint.fdotExz(fex_z,f)
-
-fdotGal =  GalDynPsrFreq.fdotint.fdotGal(fex_pl,fex_z,f)
-
-fdotShk =  GalDynPsrFreq.fdotint.fdotShk(fex_shk,f)
-
-fdotint = GalDynPsrFreq.fdotint.fdotint(fex_pl,fex_z,fex_shk,fdotobs,f)
-
-
-#### Calculating excess term for second derivative of frequency#################
+vrad = 20.
 
 ########## Model fdotdotexc (not incorporating BH contribution to Milky Way Potential) ###########
 
@@ -225,14 +209,74 @@ fddotfex = GalDynPsrFreq.fdotdotexcBH.fdotdotexcwBHcal(ldeg,bdeg,dkpc,mul,mub,Rp
 
 
 ########### Intrinsic second derivative of frequency calculations ###########################
+#Additional observable parameters required: fdotdotobs = observed second derivative of frequency in s^-3
+#Calculated parameters required: fddotfex = excess term for second derivative of frequency in s^-2 
+
+fdotdotobs = 1.2e-28
 
 fddotint = GalDynPsrFreq.fdotdotint.fdotdotintcal(fddotfex,f,fdotdotobs)
+
+
+
+###### Example ###############
+
+#Using models modelBH and fdotdotexcBH  
+
+import GalDynPsrFreq
+
+ldeg = 20.
+
+bdeg=20.
+
+dkpc = 2.
+
+mul = 20.
+
+mub = 20.
+
+vrad = 20.
+
+f = 50.
+
+fdotobs = -1.43e-15
+
+fdotdotobs = 1.2e-28
+
+Rpkpc = GalDynPsr.read_parameters.Rpkpc(ldeg, bdeg, dkpc)
+
+zkpc = GalDynPsr.read_parameters.z(ldeg, bdeg, dkpc)
+
+fex_pl = GalDynPsrFreq.modelBH.Expl(ldeg, bdeg, dkpc)
+
+fex_z = GalDynPsrFreq.modelBH.Exz(ldeg, bdeg, dkpc)
+
+fex_shk = GalDynPsrFreq.Shk.Exshk(dkpc, mul, mub)
+
+
+
+fdot_Expl =  GalDynPsrFreq.fdotint.fdotExpl(fex_pl,f)
+
+fdot_Exz =  GalDynPsrFreq.fdotint.fdotExz(fex_z,f)
+
+fdot_Gal =  GalDynPsrFreq.fdotint.fdotGal(fex_pl,fex_z,f)
+
+fdot_Shk =  GalDynPsrFreq.fdotint.fdotShk(fex_shk,f)
+
+fdot_int = GalDynPsrFreq.fdotint.fdotint(fex_pl,fex_z,fex_shk,fdotobs,f)
+
+
+
+fddotfex = GalDynPsrFreq.fdotdotexcBH.fdotdotexcwBHcal(ldeg,bdeg,dkpc,mul,mub,Rpkpc,zkpc,f,fdotobs,vrad,fex_pl,fex_z,fex_shk)
+
+fddotint = GalDynPsrFreq.fdotdotint.fdotdotintcal(fddotfex,f,fdotdotobs)
+
+
 
 #----------------------------------------------------------------------------------------------------------------------------#
 
 
 
-######### Example- when working inside the same Directory containing the modules (downloaded from https://github.com/pathakdhruv/GalDynPsrFreq) #######
+###### Example- when working inside the Directory containing the modules (downloaded from https://github.com/pathakdhruv/GalDynPsrFreq) #######
 
 
 import math
@@ -246,11 +290,11 @@ import read_parameters as par
 
 ldeg = 20.
 bdeg=20.
-vrad = 20.
-f = 50.
 dkpc = 2.
 mul = 20.
 mub = 20.
+vrad = 20.
+f = 50.
 fdotobs = -1.43e-15
 fdotdotobs = 1.2e-28
 
