@@ -1,6 +1,6 @@
 # GalDynPsrFreq Package
 
-GalDynPsrFreq is a package for calculating dynamical contributions in the second derivative of the frequencies, spin or orbital, of pulsars in the Galactic field. It can calculate the fractional contributions or the excess terms, e.g. \ddot{f}/f|_excess where f is either the orbital frequency or the spin frequency. Various dynamical contributions to the first derivative of frequency (spin or orbital), including the Shklovskii effect (the contribution due to the proper motion) or due to the acceleration of the pulsar caused by the gravitational potential of the Galaxy, can also be calculated. For the case of calculating the excess terms in the first derivative of frequency, as well as, the case for the second derivative of frequency, two models are available for each case- one incorporating BH in Galactic potential, and one without the BH contribution. Using the measured values of the frequency, frequency derivative, and frequency second derivative, GalDynPsrFreq can even compute the "intrinsic" values of the frequency derivative, as well as, the frequency second derivative, provided no other extra contribution exist. 
+GalDynPsrFreq is a package for calculating dynamical contributions in the second derivative of the frequencies, spin or orbital, of pulsars in the Galactic field. It can calculate the fractional contributions or the excess terms, e.g. \dot{f}/f|_excess and \ddot{f}/f|_excess, where f is either the orbital frequency or the spin frequency. Various dynamical contributions to the first derivative of frequency (spin or orbital), including the Shklovskii effect (the contribution due to the proper motion) or due to the acceleration of the pulsar caused by the gravitational potential of the Galaxy, can also be calculated. For the case of calculating the excess terms in the first derivative of frequency, as well as, the case for the second derivative of frequency, two models are available for each case- one incorporating BH in Galactic potential, and one without the BH contribution. Using the measured values of the frequency, frequency derivative, and frequency second derivative, GalDynPsrFreq can even compute the "intrinsic" values of the frequency derivative, as well as, the frequency second derivative, provided no other extra contribution exist. 
 
 Details on various dynamical effects and formalism to estimate those are available in Pathak and Bagchi (arXiv: 1909.13113).
 
@@ -21,7 +21,13 @@ import GalDynPsrFreq
 # 3) In all of the following modules, the ordering of the arguments of the functions are very important.
 
 
-# 4) To run this code we need the following observable parameters- Galactic longitude in degrees (say ldeg), Galactic latitude in degrees (say bdeg), the distance of the pulsar from the solar system barycenter in kpc (say dkpc), proper motion in Galactic longitude in mas/yr (say mul), proper motion in Galactic latitude in mas/yr (say mub), radial component of the relative velocity of the pulsar with respect to the solar system barycenter in km/s (say vrad), frequency in Hz (say f), observed frequency derivative in s^{-2} (say fdotobs), and observed frequency second derivative in s^{-3} (say fdotdotobs). The frequency and its derivatives can either be spin or orbital. 
+# 4)
+
+A) Observable parameters needed to compute \dot{f}/f|_excess and \dot{f}/f|_intrinsic: Galactic longitude in degrees (say ldeg), Galactic latitude in degrees (say bdeg), the distance of the pulsar from the solar system barycenter in kpc (say dkpc), proper motion in Galactic longitude in mas/yr (say mul), proper motion in Galactic latitude in mas/yr (say mub), frequency in Hz (say f), and observed frequency derivative in s^{-2} (say fdotobs).
+
+B) Observable parameters needed to compute \ddot{f}/f|_excess and \ddot{f}/f|_intrinsic: Galactic longitude in degrees (say ldeg), Galactic latitude in degrees (say bdeg), the distance of the pulsar from the solar system barycenter in kpc (say dkpc), proper motion in Galactic longitude in mas/yr (say mul), proper motion in Galactic latitude in mas/yr (say mub), radial component of the relative velocity of the pulsar with respect to the solar system barycenter in km/s (say vrad), frequency in Hz (say f), observed frequency derivative in s^{-2} (say fdotobs), and observed frequency second derivative in s^{-3} (say fdotdotobs).  
+
+The frequency and its derivatives can either be spin or orbital.
 
 
 
@@ -39,7 +45,7 @@ Remember to replace modelX by the model you want to use, i.e., modelnoBH or mode
 
 The Shklovskii term can be calculated as GalDynPsrFreq.Shk.Exshk(dkpc,  mul, mub) 
 
-where mul is the proper motion in the Galactic longitude direction (mas/yr) and mub is the proper motion in the Galactic latitude direction (mas/yr). dkpc is as usual the distance of the pulsar from the solar system barycenter in kpc. One needs to assign the values of these parameters first.
+where mul is the proper motion in the Galactic longitude direction (mas/yr) and mub is the proper motion in the Galactic latitude direction (mas/yr). dkpc is as usual the distance of the pulsar from the solar system barycenter in kpc. One needs to assign the values of these parameters first. This term is independent of the Galactic potential model.
 
 
 
@@ -107,7 +113,7 @@ fddotfex is the excess terms in the frequency second derivative, defined in poin
 
 
 
-### All the above points will be clearer from the following examples ################
+### All the above points will be clearer from the following demonstration ################
 
 
 
@@ -118,11 +124,12 @@ fddotfex is the excess terms in the frequency second derivative, defined in poin
 
 import GalDynPsrFreq
 
-## Provide the following values in your code ###
+
+#### Provide the following values in your code ####
 
 # ldeg = Galactic logitude in degrees, bdeg = Galactic latitude in degrees, dkpc = distance to pulsar in kpc
 
-########### Example #################
+
 ldeg =20.0
 
 bdeg = 20.
@@ -270,46 +277,6 @@ fddotfex = GalDynPsrFreq.fdotdotexcBH.fdotdotexcwBHcal(ldeg,bdeg,dkpc,mul,mub,Rp
 
 fddotint = GalDynPsrFreq.fdotdotint.fdotdotintcal(fddotfex,f,fdotdotobs)
 
-
-
-#----------------------------------------------------------------------------------------------------------------------------#
-
-
-
-###### Example- when working inside the Directory containing the modules (downloaded from https://github.com/pathakdhruv/GalDynPsrFreq) #######
-
-
-import math
-from modelBH import Expl
-from modelBH import Exz
-from Shk import Exshk
-from fdotdotint import fdotdotintcal
-from fdotdotexcBH import fdotdotexcwBHcal
-from fdotint import fdotint
-import read_parameters as par
-
-ldeg = 20.
-bdeg=20.
-dkpc = 2.
-mul = 20.
-mub = 20.
-vrad = 20.
-f = 50.
-fdotobs = -1.43e-15
-fdotdotobs = 1.2e-28
-
-Rpkpc = par.Rpkpc(ldeg, bdeg, dkpc)
-zkpc =par.z(ldeg, bdeg, dkpc)
-fex_pl= Expl(ldeg, bdeg, dkpc)
-fex_z= Exz(ldeg, bdeg, dkpc)
-fex_shk= Exshk(dkpc, mul, mub)
-fdot_int = fdotint(fex_pl,fex_z,fex_shk,fdotobs,f)
-fddotfex = fdotdotexcwBHcal(ldeg,bdeg,dkpc,mul,mub,Rpkpc,zkpc,f,fdotobs,vrad,fex_pl,fex_z,fex_shk)
-fddotint = fdotdotintcal(fddotfex,f,fdotdotobs)
-
-print(fdotobs,fdot_int,fdotdotobs,fddotint)
-#output: -1.43e-15 -1.2354684473383662e-15 1.2e-28 1.1999305320052803e-28
-#####################################################################
 
 
 
