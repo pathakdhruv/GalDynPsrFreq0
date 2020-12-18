@@ -138,9 +138,9 @@ dkpc = 2.0
 
 ############# Extract important parameters say values of Rp (in kpc) and z (in kpc)  ##########
 
-Rpkpc = GalDynPsr.read_parameters.Rpkpc(ldeg, bdeg, dkpc)
+Rpkpc = GalDynPsrFreq.read_parameters.Rpkpc(ldeg, bdeg, dkpc)
 
-zkpc = GalDynPsr.read_parameters.z(ldeg, bdeg, dkpc)
+zkpc = GalDynPsrFreq.read_parameters.z(ldeg, bdeg, dkpc)
 
 
 #################  Compute excess Shklovskii term for frequency first derivative using Exshk() #################################
