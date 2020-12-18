@@ -249,9 +249,9 @@ fdotobs = -1.43e-15
 
 fdotdotobs = 1.2e-28
 
-Rpkpc = GalDynPsr.read_parameters.Rpkpc(ldeg, bdeg, dkpc)
+Rpkpc = GalDynPsrFreq.read_parameters.Rpkpc(ldeg, bdeg, dkpc)
 
-zkpc = GalDynPsr.read_parameters.z(ldeg, bdeg, dkpc)
+zkpc = GalDynPsrFreq.read_parameters.z(ldeg, bdeg, dkpc)
 
 fex_pl = GalDynPsrFreq.modelBH.Expl(ldeg, bdeg, dkpc)
 
